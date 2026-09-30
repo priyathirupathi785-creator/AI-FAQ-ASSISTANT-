@@ -1,0 +1,104 @@
+import sqlite3
+
+DATABASE = "database.db"
+
+
+def create_database():
+
+    connection = sqlite3.connect(DATABASE)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS faq (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            question TEXT NOT NULL,
+            answer TEXT NOT NULL,
+            category TEXT
+        )
+    """)
+
+    # Check whether data already exists
+    cursor.execute("SELECT COUNT(*) FROM faq")
+    count = cursor.fetchone()[0]
+
+    if count == 0:
+
+        faq_data = [
+            (
+                "What is AI?",
+                "AI stands for Artificial Intelligence. It enables computers to perform intelligent tasks.",
+                "AI"
+            ),
+
+            (
+                "What is this system?",
+                "This is an AI FAQ Assistant that answers frequently asked questions.",
+                "General"
+            ),
+
+            (
+                "How does this system work?",
+                "The system receives your question and finds the most relevant answer from the FAQ database.",
+                "General"
+            ),
+
+            (
+                "Which technology is used?",
+                "Python, Flask, HTML, CSS, JavaScript and SQLite are used in this project.",
+                "Technology"
+            ),
+
+            (
+                "What is Flask?",
+                "Flask is a lightweight web framework used to create web applications using Python.",
+                "Technology"
+            ),
+
+            (
+                "What is Python?",
+                "Python is a popular programming language used for web development, data science and artificial intelligence.",
+                "Programming"
+            ),
+
+            (
+                "What is SQLite?",
+                "SQLite is a lightweight relational database management system.",
+                "Database"
+            ),
+
+            (
+                "What is FAQ?",
+                "FAQ stands for Frequently Asked Questions.",
+                "General"
+            ),
+
+            (
+                "What are the advantages of AI?",
+                "AI can automate tasks, save time, process large amounts of data and support decision making.",
+                "AI"
+            ),
+
+            (
+                "Where is AI used?",
+                "AI is used in healthcare, education, banking, transportation, business and many other fields.",
+                "AI"
+            )
+        ]
+
+        cursor.executemany(
+            """
+            INSERT INTO faq
+            (question, answer, category)
+            VALUES (?, ?, ?)
+            """,
+            faq_data
+        )
+
+    connection.commit()
+    connection.close()
+
+    print("Database created successfully!")
+
+
+if __name__ == "__main__":
+    create_database()
